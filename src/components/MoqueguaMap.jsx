@@ -5,7 +5,7 @@ import { MOQUEGUA_CENTER, BIOME_ZONES } from '../data/moqueguaData.js';
 
 function createZoneFireDivIcon(hotspot, isSelected, currentHa) {
   const biome = BIOME_ZONES[hotspot.biome];
-  const scale = isSelected ? 1.22 : currentHa > 120 ? 1.08 : 0.94;
+  const scale = isSelected ? 1.2 : currentHa > 120 ? 1.06 : 0.92;
   const ringColor =
     hotspot.severity === 'CRITICAL'
       ? '#ff3b2f'
@@ -13,7 +13,6 @@ function createZoneFireDivIcon(hotspot, isSelected, currentHa) {
       ? '#ff8c24'
       : '#ffb703';
 
-  // Distinct SVG glyph per terrestrial zone
   const biomeGlyph = {
     quebrada:
       '<path d="M4 15L8 7L11 12L14 6L18 15H4Z" fill="#fff" stroke="#120b09" stroke-width="1.2"/>',
@@ -37,11 +36,8 @@ function createZoneFireDivIcon(hotspot, isSelected, currentHa) {
             <stop offset="100%" stop-color="#9e1919"/>
           </linearGradient>
         </defs>
-        <!-- Outer Animated Flame Silhouette -->
         <path class="flame-tongue" d="M23 4C23 4 36 16.5 36 28.5C36 36.2 30.2 42 23 42C15.8 42 10 36.2 10 28.5C10 22.8 13.4 17.5 16.5 14.5C16.2 18.2 18.4 20.4 18.4 20.4C18.4 20.4 17.8 12.2 23 4Z" fill="url(#flame-${hotspot.id})" stroke="#1a0c08" stroke-width="1.5"/>
-        <!-- Inner Core -->
         <path d="M23 19C23 19 29 24.5 29 30.2C29 33.8 26.3 36.5 23 36.5C19.7 36.5 17 33.8 17 30.2C17 26.8 19.4 23.2 23 19Z" fill="#fff7d6"/>
-        <!-- Terrestrial Zone Badge -->
         <g transform="translate(24, 29)">
           <circle cx="11" cy="11" r="10.5" fill="${biome.color}" stroke="#0d0a0b" stroke-width="2"/>
           ${biomeGlyph}
@@ -73,12 +69,10 @@ export default function MoqueguaMap({
   const mapInstanceRef = useRef(null);
   const layerGroupRef = useRef(null);
 
-  // View modes: 'split' (Before Optical vs After SAR), 'sar', 'optical'
   const [viewMode, setViewMode] = useState('split');
   const [sliderPos, setSliderPos] = useState(52);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Initialize Leaflet Map once
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
@@ -90,16 +84,14 @@ export default function MoqueguaMap({
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    // High-resolution satellite basemap (Esri World Imagery)
     L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
-        attribution: 'Tiles &copy; Esri &mdash; NASA Earthdata Sentinel-1 SAR Overlay',
+        attribution: 'Tiles &copy; Esri &mdash; NASA Earthdata Sentinel-1 SAR',
         maxZoom: 18
       }
     ).addTo(map);
 
-    // Subtle reference labels overlay
     L.tileLayer(
       'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
       {
@@ -111,19 +103,21 @@ export default function MoqueguaMap({
     layerGroupRef.current = L.layerGroup().addTo(map);
     mapInstanceRef.current = map;
 
+    const handleResize = () => map.invalidateSize();
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
       map.remove();
       mapInstanceRef.current = null;
     };
   }, []);
 
-  // Fly to selected hotspot when requested
   useEffect(() => {
     if (!mapInstanceRef.current || !selectedHotspot) return;
     mapInstanceRef.current.flyTo(selectedHotspot.coords, 13, { duration: 0.9 });
   }, [selectedHotspot, focusTrigger]);
 
-  // Render SAR Burn Scar Polygons & Zone-Adaptive Fire Markers
   useEffect(() => {
     const group = layerGroupRef.current;
     if (!group) return;
@@ -136,7 +130,6 @@ export default function MoqueguaMap({
       const isSelected = selectedHotspot?.id === spot.id;
       const biome = BIOME_ZONES[spot.biome];
 
-      // 1. SAR Burn Scar Polygon
       if (layers.burnPolygons && currentHa > 0) {
         const poly = L.polygon(spot.polygon, {
           color: isSelected ? '#ffffff' : biome.color,
@@ -150,13 +143,13 @@ export default function MoqueguaMap({
         poly.addTo(group);
       }
 
-      // 2. Zone-Adaptive Flame Marker
       if (layers.fireMarkers && currentHa > 0) {
         const marker = L.marker(spot.coords, {
           icon: createZoneFireDivIcon(spot, isSelected, currentHa)
         });
 
-        marker.bindPopup(`
+        marker.bindPopup(
+          `
           <div class="pacha-popup">
             <div class="pacha-popup-header">
               <span class="popup-sev">${spot.severity}</span>
@@ -172,7 +165,9 @@ export default function MoqueguaMap({
             </div>
             <p class="popup-source">Source: ${spot.localSource}</p>
           </div>
-        `);
+        `,
+          { maxWidth: 260 }
+        );
 
         marker.on('click', () => onSelectHotspot(spot));
         marker.addTo(group);
@@ -180,12 +175,11 @@ export default function MoqueguaMap({
     });
   }, [hotspots, stepIndex, selectedHotspot, layers, onSelectHotspot]);
 
-  // Handle Split-Screen Comparator Drag
   const handlePointerMove = (e) => {
     if (!isDragging || !mapContainerRef.current) return;
     const rect = mapContainerRef.current.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const pct = Math.max(8, Math.min(92, ((clientX - rect.left) / rect.width) * 100));
+    const pct = Math.max(10, Math.min(90, ((clientX - rect.left) / rect.width) * 100));
     setSliderPos(pct);
   };
 
@@ -202,7 +196,7 @@ export default function MoqueguaMap({
       <div className="map-top-bar">
         <div className="location-breadcrumb">
           <span className="crumb-region">PERU / MOQUEGUA</span>
-          <span className="crumb-title">Mariscal Nieto Wildfire Corridor</span>
+          <span className="crumb-title">Mariscal Nieto Corridor</span>
         </div>
 
         <div className="view-mode-pills" role="group" aria-label="Sensor Comparison Mode">
@@ -210,22 +204,22 @@ export default function MoqueguaMap({
             className={`mode-pill ${viewMode === 'split' ? 'active' : ''}`}
             onClick={() => setViewMode('split')}
           >
-            <SplitSquareHorizontal size={14} />
-            <span>Before / After Split</span>
+            <SplitSquareHorizontal size={13} />
+            <span>Split</span>
           </button>
           <button
             className={`mode-pill ${viewMode === 'sar' ? 'active' : ''}`}
             onClick={() => setViewMode('sar')}
           >
-            <Radio size={14} />
-            <span>SAR Radar Only</span>
+            <Radio size={13} />
+            <span>SAR Radar</span>
           </button>
           <button
             className={`mode-pill ${viewMode === 'optical' ? 'active' : ''}`}
             onClick={() => setViewMode('optical')}
           >
-            <Eye size={14} />
-            <span>Optical (Smoke)</span>
+            <Eye size={13} />
+            <span>Optical</span>
           </button>
         </div>
       </div>
@@ -233,7 +227,7 @@ export default function MoqueguaMap({
       {/* Leaflet Interactive Map Canvas */}
       <div ref={mapContainerRef} className="leaflet-canvas" />
 
-      {/* Optical Smoke Simulation Overlay (Left Side in Split Mode, Full in Optical Mode) */}
+      {/* Optical Smoke Simulation Overlay */}
       {layers.smokeOverlay && currentStep.smokeCoverPct > 10 && viewMode !== 'sar' && (
         <div
           className="optical-smoke-curtain"
@@ -244,15 +238,13 @@ export default function MoqueguaMap({
         >
           <div className="smoke-plume-texture" />
           <div className="lens-badge lens-badge-left">
-            <CloudFog size={14} />
-            <span>
-              BEFORE / OPTICAL SENSOR — {currentStep.smokeCoverPct}% Smoke Obscuration
-            </span>
+            <CloudFog size={13} />
+            <span>OPTICAL ({currentStep.smokeCoverPct}% Smoke)</span>
           </div>
         </div>
       )}
 
-      {/* SAR Radar False-Color Tint Overlay (Right Side in Split Mode, Full in SAR Mode) */}
+      {/* SAR Radar False-Color Tint Overlay */}
       {viewMode !== 'optical' && (
         <div
           className="sar-radar-curtain"
@@ -263,19 +255,22 @@ export default function MoqueguaMap({
         >
           <div className="sar-scanline-grid" />
           <div className="lens-badge lens-badge-right">
-            <Radio size={14} />
-            <span>AFTER / SENTINEL-1 C-BAND SAR — Smoke-Penetrating View</span>
+            <Radio size={13} />
+            <span>SAR RADAR (Smoke-Free)</span>
           </div>
         </div>
       )}
 
-      {/* Draggable Split Comparator Handle */}
+      {/* Draggable Split Comparator Handle (Touch + Mouse Friendly) */}
       {viewMode === 'split' && (
         <div
           className="split-divider-line"
           style={{ left: `${sliderPos}%` }}
           onMouseDown={() => setIsDragging(true)}
-          onTouchStart={() => setIsDragging(true)}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            setIsDragging(true);
+          }}
           role="slider"
           aria-label="Drag to compare Optical Smoke vs SAR Radar"
           aria-valuenow={Math.round(sliderPos)}
@@ -286,9 +281,9 @@ export default function MoqueguaMap({
         </div>
       )}
 
-      {/* Floating Map Legend */}
+      {/* Floating Map Legend (Desktop / Tablet) */}
       <div className="map-floating-legend">
-        <div className="legend-title">SAR & FIRE SYMBOLOGY</div>
+        <div className="legend-title">SAR &amp; FIRE SYMBOLOGY</div>
         <div className="legend-row">
           <span className="legend-swatch swatch-critical" />
           <span>Critical Fire Front (&gt; -6.0 dB Δσ⁰)</span>

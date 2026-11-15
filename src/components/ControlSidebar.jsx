@@ -60,7 +60,7 @@ export default function ControlSidebar({
       <div className="panel-card">
         <div className="section-header-row">
           <span className="section-label">
-            <Layers size={13} /> SAR & HAZARD LAYERS
+            <Layers size={13} /> SAR &amp; HAZARD LAYERS
           </span>
           <span className="active-counter">
             {Object.values(layers).filter(Boolean).length} active
@@ -186,7 +186,7 @@ export default function ControlSidebar({
         </p>
         <div className="radar-info-footnote">
           <Info size={12} />
-          <span>Demo integrates NASA Earthdata Sentinel-1 & COER Moquegua records.</span>
+          <span>Demo integrates NASA Earthdata Sentinel-1 &amp; COER Moquegua records.</span>
         </div>
       </div>
     </aside>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { KeyRound, X, CheckCircle2, AlertTriangle, ExternalLink, Trash2 } from 'lucide-react';
 
 export default function NasaApiModal({ isOpen, onClose, apiKeys, onSaveKeys }) {
-  // Blank by default until the user pastes their own NASA tokens manually
   const [earthdataToken, setEarthdataToken] = useState(apiKeys.earthdataToken || '');
   const [firmsMapKey, setFirmsMapKey] = useState(apiKeys.firmsMapKey || '');
   const [testStatus, setTestStatus] = useState(null);
@@ -45,7 +44,6 @@ export default function NasaApiModal({ isOpen, onClose, apiKeys, onSaveKeys }) {
     setTestStatus(null);
 
     try {
-      // If NASA FIRMS MAP_KEY is provided, query Moquegua bounding box (-71.5,-17.8,-70.0,-16.0)
       if (firmsMapKey.trim()) {
         const bbox = '-71.5,-17.8,-70.0,-16.0';
         const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${encodeURIComponent(
@@ -67,7 +65,6 @@ export default function NasaApiModal({ isOpen, onClose, apiKeys, onSaveKeys }) {
         }
       }
 
-      // Otherwise verify NASA CMR Sentinel-1 endpoint availability
       const cmrRes = await fetch(
         'https://cmr.earthdata.nasa.gov/search/granules.json?short_name=SENTINEL-1A_DUAL_POL_GRD_HIGH_RES&bounding_box=-71.5,-17.8,-70.0,-16.0&page_size=2'
       );
@@ -177,7 +174,7 @@ export default function NasaApiModal({ isOpen, onClose, apiKeys, onSaveKeys }) {
               onClick={handleTestLiveConnection}
               disabled={isTesting}
             >
-              <span>{isTesting ? 'Testing...' : 'Test NASA Endpoint'}</span>
+              <span>{isTesting ? 'Testing...' : 'Test Endpoint'}</span>
             </button>
             <button type="submit" className="btn btn-primary">
               <span>Save Credentials</span>

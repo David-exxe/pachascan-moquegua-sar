@@ -18,7 +18,7 @@ export default function Header({
       <div className="header-inner">
         {/* Brand Identity */}
         <div className="brand-cluster" onClick={() => setActiveTab('explorer')} role="button" tabIndex={0}>
-          <PachaLogo size={42} />
+          <PachaLogo size={40} />
           <div className="brand-divider" />
           <div className="brand-tagline">
             <span className="tagline-pill">SCIENCE · ALERT · LIFE</span>
@@ -40,14 +40,14 @@ export default function Header({
             onClick={() => setActiveTab('physics')}
           >
             <Satellite size={15} />
-            <span>About SAR Radar</span>
+            <span>About SAR</span>
           </button>
           <button
             className={`nav-tab ${activeTab === 'validation' ? 'active' : ''}`}
             onClick={() => setActiveTab('validation')}
           >
             <ShieldCheck size={15} />
-            <span>Local Validation</span>
+            <span>Validation</span>
           </button>
         </nav>
 
@@ -64,7 +64,7 @@ export default function Header({
             title="Simulate Orbital SAR Wildfire Detection & Sound Radar Alarm"
           >
             <BellRing size={15} />
-            <span>Test Fire Alarm</span>
+            <span className="btn-label-responsive">Test Alarm</span>
           </button>
 
           <button
@@ -73,7 +73,7 @@ export default function Header({
             title="Configure NASA Earthdata & NASA FIRMS API Keys"
           >
             <KeyRound size={15} />
-            <span>NASA API Config</span>
+            <span className="btn-label-responsive">NASA API</span>
             <span className={`key-status-dot ${hasApiKeys ? 'connected' : 'pending'}`} />
           </button>
 
@@ -83,7 +83,7 @@ export default function Header({
             title="Export Moquegua Wildfire Telemetry Summary (JSON)"
           >
             <Download size={15} />
-            <span>Export</span>
+            <span className="btn-label-responsive">Export</span>
           </button>
         </div>
       </div>

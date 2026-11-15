@@ -9,6 +9,7 @@ export default function PachaLogo({ size = 44 }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="PACHA SCAN Official Emblem"
+      className="pacha-brand-svg"
     >
       <defs>
         <linearGradient id="magmaGrad" x1="0%" y1="0%" x2="100%" y2="100%">

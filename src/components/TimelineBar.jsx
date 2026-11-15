@@ -10,7 +10,7 @@ export default function TimelineBar({ stepIndex, setStepIndex, isPlaying, setIsP
       <div className="timeline-header">
         <div className="timeline-title-group">
           <Calendar size={15} className="accent-orange" />
-          <span className="timeline-heading">Observe Territorial Change (Before &amp; After SAR Pass)</span>
+          <span className="timeline-heading">SAR Pass Timeline</span>
           <span className="phase-chip">{current.phase}</span>
         </div>
 
@@ -26,8 +26,8 @@ export default function TimelineBar({ stepIndex, setStepIndex, isPlaying, setIsP
           onClick={() => setIsPlaying(!isPlaying)}
           aria-label={isPlaying ? 'Pause SAR time-series' : 'Play SAR time-series'}
         >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-          <span>{isPlaying ? 'Pause' : 'Play Pass'}</span>
+          {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+          <span>{isPlaying ? 'Pause' : 'Play'}</span>
         </button>
 
         <div className="timeline-track-wrapper">
@@ -44,7 +44,8 @@ export default function TimelineBar({ stepIndex, setStepIndex, isPlaying, setIsP
                 }}
               >
                 <span className="step-dot" />
-                <span className="step-date">{step.displayDate}</span>
+                <span className="step-date-full">{step.displayDate}</span>
+                <span className="step-date-short">{step.shortDate}</span>
                 <span className="step-ha">{step.totalHectares} ha</span>
               </button>
             ))}

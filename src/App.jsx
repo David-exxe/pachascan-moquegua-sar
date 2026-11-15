@@ -16,7 +16,7 @@ import { Radio, ShieldCheck, Flame, ExternalLink } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('explorer');
-  const [stepIndex, setStepIndex] = useState(4); // Default to latest active SAR pass (Nov 14, 2026)
+  const [stepIndex, setStepIndex] = useState(4);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedHotspot, setSelectedHotspot] = useState(WILDFIRE_HOTSPOTS[0]);
   const [focusTrigger, setFocusTrigger] = useState(0);
@@ -29,7 +29,6 @@ export default function App() {
     smokeOverlay: true
   });
 
-  // NASA API keys initialized blank and persisted locally in browser storage
   const [isApiModalOpen, setIsApiModalOpen] = useState(false);
   const [apiKeys, setApiKeys] = useState(() => {
     try {
@@ -49,7 +48,6 @@ export default function App() {
     }
   };
 
-  // Playback timer for Before/After SAR pass animation
   useEffect(() => {
     if (!isPlaying) return;
     const timer = setInterval(() => {

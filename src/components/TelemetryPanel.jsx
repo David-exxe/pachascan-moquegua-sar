@@ -14,7 +14,6 @@ export default function TelemetryPanel({
   const chartCanvasRef = useRef(null);
   const chartInstanceRef = useRef(null);
 
-  // Calculate biome breakdown dynamically for the current timeline step
   const biomeTotals = Object.keys(BIOME_ZONES).map((biomeKey) => {
     const ha = hotspots
       .filter((h) => h.biome === biomeKey)
@@ -27,7 +26,6 @@ export default function TelemetryPanel({
 
   const maxBiomeHa = Math.max(250, ...biomeTotals.map((b) => b.ha));
 
-  // Build / Update Chart.js telemetry visualization
   useEffect(() => {
     if (!chartCanvasRef.current) return;
     const ctx = chartCanvasRef.current.getContext('2d');
@@ -36,7 +34,7 @@ export default function TelemetryPanel({
       chartInstanceRef.current.destroy();
     }
 
-    const labels = TIMELINE_STEPS.map((s) => s.displayDate.replace(', 2026', ''));
+    const labels = TIMELINE_STEPS.map((s) => s.shortDate);
     const haSeries = TIMELINE_STEPS.map((s) => s.totalHectares);
     const dbSeries = TIMELINE_STEPS.map((s) => Math.abs(s.meanBackscatterDrop));
 
@@ -110,7 +108,6 @@ export default function TelemetryPanel({
 
   return (
     <aside className="sidebar-right">
-      {/* Main KPI Card */}
       <div className="panel-card kpi-hero-card">
         <div className="eyebrow">MOQUEGUA TELEMETRY · {currentStep.displayDate.toUpperCase()}</div>
         <h3 className="panel-title-sm">Territory Under Thermal Stress</h3>
@@ -146,7 +143,6 @@ export default function TelemetryPanel({
         </div>
       </div>
 
-      {/* Affected Area by Terrestrial Ecosystem */}
       <div className="panel-card">
         <div className="section-header-row">
           <span className="section-label">AFFECTED AREA BY BIOME</span>
@@ -177,7 +173,6 @@ export default function TelemetryPanel({
         </div>
       </div>
 
-      {/* Time-Series Evolution Chart */}
       <div className="panel-card">
         <div className="section-header-row">
           <span className="section-label">SAR EVOLUTION (OCT 28 – NOV 14)</span>
@@ -187,7 +182,6 @@ export default function TelemetryPanel({
         </div>
       </div>
 
-      {/* Selected Sector Field Dossier */}
       {selectedHotspot && (
         <div className="panel-card selected-dossier">
           <div className="dossier-top">

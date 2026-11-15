@@ -25,12 +25,11 @@ export default function AlarmBanner({
           <Flame size={18} />
         </div>
         <div className="alarm-copy">
-          <span className="alarm-badge">{target.severity} SAR WILDFIRE ALERT</span>
-          <strong>{target.name}</strong>
+          <span className="alarm-badge">{target.severity} SAR ALERT</span>
+          <strong className="alarm-target-name">{target.name}</strong>
           <span className="alarm-meta">
-            Backscatter Anomaly: <b>{target.deltaDb} dB</b> · Active Perimeter:{' '}
-            <b>{currentStep.totalHectares} ha</b> · Smoke Obscuration: <b>{currentStep.smokeCoverPct}%</b>{' '}
-            (Penetrated by C-Band Radar)
+            Δσ⁰: <b>{target.deltaDb} dB</b> · Area: <b>{currentStep.totalHectares} ha</b> · Smoke:{' '}
+            <b>{currentStep.smokeCoverPct}%</b>
           </span>
         </div>
       </div>
@@ -38,14 +37,14 @@ export default function AlarmBanner({
       <div className="alarm-banner-actions">
         <button className="btn-alarm-mini" onClick={() => onFocusHotspot(target)}>
           <Crosshair size={14} />
-          <span>Center Target</span>
+          <span>Center</span>
         </button>
         <button className="btn-alarm-mini" onClick={onReplaySound}>
           <Volume2 size={14} />
-          <span>Radar Chime</span>
+          <span>Chime</span>
         </button>
         <button className="btn-alarm-close" onClick={onDismiss} aria-label="Dismiss Alert">
-          <X size={15} />
+          <X size={16} />
         </button>
       </div>
     </div>
