@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production builds
+dist/
+build/
+
+# Local environment & API keys (never commit NASA tokens)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor & OS files
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,41 @@
+{
+  "region": "Moquegua, Peru",
+  "validation_sources": [
+    "COER Moquegua (Centro de Operaciones de Emergencia Regional)",
+    "INDECI - SINPAD (Sistema de Informaci\u00f3n Nacional para la Respuesta y Rehabilitaci\u00f3n)",
+    "SERFOR (Servicio Nacional Forestal y de Fauna Silvestre - Monitoreo Satelital)"
+  ],
+  "total_affected_hectares": 648,
+  "sectors": [
+    {
+      "code": "ZONE 01",
+      "sector": "Quebrada El Rayo - San Antonio",
+      "biome": "Dry Quebrada",
+      "hectares": 248
+    },
+    {
+      "code": "ZONE 02",
+      "sector": "Omo - Lower Moquegua Valley",
+      "biome": "Agricultural & Riparian Valley",
+      "hectares": 146
+    },
+    {
+      "code": "ZONE 03",
+      "sector": "Tumilaca Slopes - Samegua",
+      "biome": "Andean Matorral",
+      "hectares": 118
+    },
+    {
+      "code": "ZONE 04",
+      "sector": "Huaracanito - Rayito de Sol",
+      "biome": "Dry Quebrada",
+      "hectares": 64
+    },
+    {
+      "code": "ZONE 05",
+      "sector": "Chujulay Gorge - High Torata",
+      "biome": "High-Altitude Puna",
+      "hectares": 72
+    }
+  ]
+}
